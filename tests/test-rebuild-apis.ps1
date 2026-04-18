@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string[]]$BatchFiles = @(),
     [string]$OutputPath = ''
 )
@@ -47,14 +47,46 @@ if (-not $targets -or $targets.Count -eq 0) {
 
 $results = New-Object System.Collections.Generic.List[object]
 
+function Get-OperationEntries {
+    param(
+        [object]$PathsObject
+    )
+
+    $entries = New-Object System.Collections.Generic.List[object]
+    if (-not $PathsObject) {
+        return $entries
+    }
+
+    foreach ($pathProp in $PathsObject.PSObject.Properties) {
+        $pathName = [string]$pathProp.Name
+        $pathItem = $pathProp.Value
+        foreach ($method in @('get', 'post', 'put', 'patch', 'delete')) {
+            $op = $pathItem.$method
+            if ($null -ne $op) {
+                $entries.Add([ordered]@{
+                    Path = $pathName
+                    Method = $method.ToUpperInvariant()
+                    Operation = $op
+                })
+            }
+        }
+    }
+
+    return $entries
+}
+
 foreach ($file in $targets) {
-    $raw = Get-Content -Path $file.FullName -Raw
+    $raw = Get-Content -Path $file.FullName -Raw -Encoding UTF8
     try {
         $doc = $raw | ConvertFrom-Json
     } catch {
         $results.Add([ordered]@{
             file = $file.FullName
-            api_id = $null
+            source_doc = $null
+            operation_id = $null
+            method = $null
+            path = $null
+            original_url = $null
             test_url = $null
             http_status = $null
             biz_code = $null
@@ -66,12 +98,44 @@ foreach ($file in $targets) {
         continue
     }
 
-    foreach ($api in $doc.apis) {
-        $baseUrl = [string]$api.test_request.url
-        $query = @()
+    $baseUrl = [string]$doc.'x-test-base-url'
+    if ([string]::IsNullOrWhiteSpace($baseUrl)) {
+        $baseUrl = 'https://api.bilibili.com'
+    }
+    $baseUrl = $baseUrl.TrimEnd('/')
+    $sourceDoc = [string]$doc.'x-source-doc'
 
-        if ($api.test_request.query) {
-            foreach ($prop in $api.test_request.query.PSObject.Properties) {
+    $ops = Get-OperationEntries -PathsObject $doc.paths
+    if (-not $ops -or $ops.Count -eq 0) {
+        $results.Add([ordered]@{
+            file = $file.FullName
+            source_doc = $sourceDoc
+            operation_id = $null
+            method = $null
+            path = $null
+            original_url = $null
+            test_url = $null
+            http_status = $null
+            biz_code = $null
+            biz_message = $null
+            success = $false
+            error = 'No operations in OpenAPI paths'
+            elapsed_ms = 0
+        })
+        continue
+    }
+
+    foreach ($entry in $ops) {
+        $pathName = [string]$entry.Path
+        $method = [string]$entry.Method
+        $op = $entry.Operation
+        $opId = [string]$op.operationId
+        $originalUrl = [string]$op.'x-original-url'
+
+        $testReq = $op.'x-test-request'
+        $query = @()
+        if ($testReq -and $testReq.query) {
+            foreach ($prop in $testReq.query.PSObject.Properties) {
                 $k = [string]$prop.Name
                 $v = [string]$prop.Value
                 if ([string]::IsNullOrWhiteSpace($v)) {
@@ -84,12 +148,22 @@ foreach ($file in $targets) {
             }
         }
 
-        $uri = if ($query.Count -gt 0) { "${baseUrl}?" + ($query -join '&') } else { $baseUrl }
+        $uri = "$baseUrl$pathName"
+        if ($query.Count -gt 0) {
+            $uri = "${uri}?" + ($query -join '&')
+        }
+
         $headers = @{}
-        if ($api.test_request.headers) {
-            foreach ($prop in $api.test_request.headers.PSObject.Properties) {
+        if ($testReq -and $testReq.headers) {
+            foreach ($prop in $testReq.headers.PSObject.Properties) {
                 $headers[[string]$prop.Name] = [string]$prop.Value
             }
+        }
+        if (-not $headers.ContainsKey('Accept')) {
+            $headers['Accept'] = 'application/json'
+        }
+        if (-not $headers.ContainsKey('User-Agent')) {
+            $headers['User-Agent'] = 'Mozilla/5.0'
         }
 
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
@@ -98,7 +172,7 @@ foreach ($file in $targets) {
         $errText = $null
 
         try {
-            $resp = Invoke-WebRequest -Uri $uri -Method ([string]$api.method) -Headers $headers -UseBasicParsing -TimeoutSec 20
+            $resp = Invoke-WebRequest -Uri $uri -Method $method -Headers $headers -UseBasicParsing -TimeoutSec 20
             $httpStatus = [int]$resp.StatusCode
             $bodyText = [string]$resp.Content
         } catch {
@@ -139,8 +213,11 @@ foreach ($file in $targets) {
 
         $results.Add([ordered]@{
             file = $file.FullName
-            api_id = [string]$api.id
-            api_name = [string]$api.name
+            source_doc = $sourceDoc
+            operation_id = $opId
+            method = $method
+            path = $pathName
+            original_url = $originalUrl
             test_url = $uri
             http_status = $httpStatus
             biz_code = $bizCode
@@ -164,7 +241,7 @@ $jsonOutput = [ordered]@{
     passed = ($results | Where-Object { $_.success }).Count
     failed = ($results | Where-Object { -not $_.success }).Count
     results = $results
-} | ConvertTo-Json -Depth 20
+} | ConvertTo-Json -Depth 30
 
 [System.IO.File]::WriteAllText($OutputPath, $jsonOutput, $enc)
 Write-Host "API test report written: $OutputPath"

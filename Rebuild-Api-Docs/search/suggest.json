@@ -1,162 +1,404 @@
 {
-    "meta":  {
-                 "source_doc":  "docs/search/suggest.md",
-                 "output_file_format":  "json",
-                 "encoding":  "UTF-8",
-                 "generated_at":  "2026-04-18T13:39:24+08:00",
-                 "test_base_url":  "https://api.bilibili.com",
-                 "notes":  "Keep original endpoint definitions; test all APIs with test_base_url + path."
-             },
-    "apis":  [
-                 {
-                     "id":  "SUGGEST-01",
-                     "name":  "Web search suggest",
-                     "method":  "GET",
-                     "path":  "/main/suggest",
-                     "original_url":  "https://s.search.bilibili.com/main/suggest",
-                     "auth":  {
-                                  "wbi_signature":  false,
-                                  "cookie":  [
-                                                 "buvid3"
-                                             ]
-                              },
-                     "request_schema":  {
-                                            "query":  [
-                                                          {
-                                                              "name":  "term",
-                                                              "type":  "string",
-                                                              "required":  true
-                                                          },
-                                                          {
-                                                              "name":  "main_ver",
-                                                              "type":  "string",
-                                                              "required":  false,
-                                                              "default":  "v1"
-                                                          },
-                                                          {
-                                                              "name":  "func",
-                                                              "type":  "string",
-                                                              "required":  false,
-                                                              "default":  "suggest"
-                                                          },
-                                                          {
-                                                              "name":  "suggest_type",
-                                                              "type":  "string",
-                                                              "required":  false,
-                                                              "default":  "accurate"
-                                                          },
-                                                          {
-                                                              "name":  "sub_type",
-                                                              "type":  "string",
-                                                              "required":  false,
-                                                              "default":  "tag"
-                                                          },
-                                                          {
-                                                              "name":  "tag_num",
-                                                              "type":  "integer",
-                                                              "required":  false,
-                                                              "default":  10
-                                                          },
-                                                          {
-                                                              "name":  "spmid",
-                                                              "type":  "string",
-                                                              "required":  false,
-                                                              "default":  "333.1007"
-                                                          },
-                                                          {
-                                                              "name":  "buvid",
-                                                              "type":  "string",
-                                                              "required":  false
-                                                          }
-                                                      ],
-                                            "headers":  [
-                                                            {
-                                                                "name":  "User-Agent",
-                                                                "required":  false
-                                                            }
-                                                        ]
-                                        },
-                     "test_request":  {
-                                          "url":  "https://api.bilibili.com/main/suggest",
-                                          "query":  {
-                                                        "term":  "luotianyi",
-                                                        "main_ver":  "v1",
-                                                        "func":  "suggest",
-                                                        "suggest_type":  "accurate",
-                                                        "sub_type":  "tag"
-                                                    },
-                                          "headers":  {
-                                                          "User-Agent":  "Mozilla/5.0",
-                                                          "Accept":  "application/json"
-                                                      }
-                                      },
-                     "response_schema":  {
-                                             "success":  {
-                                                             "code":  "integer",
-                                                             "exp_str":  "string",
-                                                             "result":  "object",
-                                                             "stoken":  "string"
-                                                         },
-                                             "failure":  {
-                                                             "code":  "integer",
-                                                             "message":  "string"
-                                                         }
-                                         },
-                     "error_codes":  [
-                                         {
-                                             "code":  0,
-                                             "http_status":  200,
-                                             "description":  "ok",
-                                             "retryable":  false
-                                         },
-                                         {
-                                             "code":  -400,
-                                             "http_status":  400,
-                                             "description":  "bad params",
-                                             "retryable":  false
-                                         },
-                                         {
-                                             "code":  -412,
-                                             "http_status":  412,
-                                             "description":  "risk blocked",
-                                             "retryable":  false
-                                         },
-                                         {
-                                             "code":  "5xx",
-                                             "http_status":  500,
-                                             "description":  "server error",
-                                             "retryable":  true
-                                         }
-                                     ],
-                     "samples":  {
-                                     "curl":  "curl -G \u0027https://s.search.bilibili.com/main/suggest\u0027 --data-urlencode \u0027term=luotianyi\u0027 --data-urlencode \u0027main_ver=v1\u0027 --data-urlencode \u0027func=suggest\u0027 --data-urlencode \u0027suggest_type=accurate\u0027 --data-urlencode \u0027sub_type=tag\u0027",
-                                     "success_response":  {
-                                                              "exp_str":  "106301_106700",
-                                                              "code":  0,
-                                                              "result":  {
-                                                                             "tag":  [
-                                                                                         {
-                                                                                             "value":  "luotianyi",
-                                                                                             "term":  "luotianyi",
-                                                                                             "ref":  0,
-                                                                                             "name":  "\u003cem class=\"suggest_high_light\"\u003eluotianyi\u003c/em\u003e",
-                                                                                             "spid":  5,
-                                                                                             "type":  ""
-                                                                                         }
-                                                                                     ]
-                                                                         },
-                                                              "stoken":  "4020133863501304726"
-                                                          },
-                                     "failure_response":  {
-                                                              "code":  -400,
-                                                              "message":  "bad request",
-                                                              "result":  {
-                                                                             "tag":  [
-
-                                                                                     ]
-                                                                         }
-                                                          }
-                                 }
-                 }
-             ]
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bilibili 搜索建议 OpenAPI",
+    "version": "1.0.0",
+    "description": "依据 docs/search/suggest.md 重建。参数声明、接口描述和示例均来自原始文档。"
+  },
+  "servers": [
+    {
+      "url": "https://api.bilibili.com",
+      "description": "统一测试根路径"
+    },
+    {
+      "url": "https://s.search.bilibili.com",
+      "description": "搜索服务域名（原始接口可能使用）"
+    },
+    {
+      "url": "https://app.bilibili.com",
+      "description": "App 域名（原始接口可能使用）"
+    }
+  ],
+  "tags": [
+    {
+      "name": "搜索建议",
+      "description": "搜索建议 接口"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Buvid3Cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "buvid3",
+        "description": "Cookie 中的 buvid3。"
+      },
+      "SessdataCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "SESSDATA",
+        "description": "Cookie 中的 SESSDATA。"
+      }
+    },
+    "schemas": {
+      "BaseCodeMessageTtl": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "example": "0"
+          },
+          "ttl": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "GenericSuccessResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseCodeMessageTtl"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "GenericErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": -400
+          },
+          "message": {
+            "type": "string",
+            "example": "bad request"
+          },
+          "ttl": {
+            "type": "integer",
+            "nullable": true,
+            "example": 1
+          },
+          "data": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/main/suggest": {
+      "get": {
+        "tags": [
+          "搜索建议"
+        ],
+        "summary": "Web search suggest",
+        "description": "搜索建议接口（Web）。最多返回 10 个建议关键词，支持中文、拼音及多语言输入建议。",
+        "operationId": "suggest_01",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "description": "需要获得建议的输入内容。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "main_ver",
+            "in": "query",
+            "required": false,
+            "description": "主版本，默认 v1。",
+            "schema": {
+              "type": "string",
+              "default": "v1"
+            }
+          },
+          {
+            "name": "func",
+            "in": "query",
+            "required": false,
+            "description": "函数名，默认 suggest。",
+            "schema": {
+              "type": "string",
+              "default": "suggest"
+            }
+          },
+          {
+            "name": "suggest_type",
+            "in": "query",
+            "required": false,
+            "description": "建议类型，默认 accurate。",
+            "schema": {
+              "type": "string",
+              "default": "accurate"
+            }
+          },
+          {
+            "name": "sub_type",
+            "in": "query",
+            "required": false,
+            "description": "子类型，默认 tag。",
+            "schema": {
+              "type": "string",
+              "default": "tag"
+            }
+          },
+          {
+            "name": "tag_num",
+            "in": "query",
+            "required": false,
+            "description": "Tag 数，默认 10。",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "spmid",
+            "in": "query",
+            "required": false,
+            "description": "页面来源标识，默认 333.1007。",
+            "schema": {
+              "type": "string",
+              "default": "333.1007"
+            }
+          },
+          {
+            "name": "buvid",
+            "in": "query",
+            "required": false,
+            "description": "等同 Cookie 中 buvid3。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "highlight",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "userid",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "bangumi_acc_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "special_acc_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "topic_acc_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "upuser_acc_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "special_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "bangumi_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "upuser_num",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "default": 3
+            }
+          },
+          {
+            "name": "rnd",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericSuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功示例",
+                    "value": {
+                      "exp_str": "106301_106700",
+                      "code": 0,
+                      "result": {
+                        "tag": [
+                          {
+                            "value": "luotianyi",
+                            "term": "luotianyi",
+                            "ref": 0,
+                            "name": "<em class=\"suggest_high_light\">luotianyi</em>",
+                            "spid": 5,
+                            "type": ""
+                          }
+                        ]
+                      },
+                      "stoken": "4020133863501304726"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad params",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                },
+                "examples": {
+                  "failure": {
+                    "summary": "失败示例",
+                    "value": {
+                      "code": -400,
+                      "message": "bad request",
+                      "result": {
+                        "tag": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "risk blocked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-original-url": "https://s.search.bilibili.com/main/suggest",
+        "x-test-request": {
+          "query": {
+            "term": "洛天依",
+            "main_ver": "v1",
+            "func": "suggest",
+            "suggest_type": "accurate",
+            "sub_type": "tag"
+          },
+          "headers": {
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/json"
+          }
+        },
+        "security": [
+          {
+            "Buvid3Cookie": []
+          }
+        ]
+      }
+    }
+  },
+  "x-source-doc": "docs/search/suggest.md",
+  "x-template-file": "Template/template.json",
+  "x-test-base-url": "https://api.bilibili.com",
+  "x-generated-at": "2026-04-18T06:33:14.834Z"
 }

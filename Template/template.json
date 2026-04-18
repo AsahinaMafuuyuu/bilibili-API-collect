@@ -145,7 +145,7 @@
             "type": "integer",
             "format": "int64",
             "description": "默认搜索条目的内部 ID。",
-            "example": 3296036255232726500
+            "example": 3296036255232726331
           },
           "type": {
             "type": "integer",
@@ -664,7 +664,7 @@
                       "ttl": 1,
                       "data": {
                         "seid": "17607543598496143098",
-                        "id": 3296036255232726500,
+                        "id": 3296036255232726331,
                         "type": 0,
                         "show_name": "歪果仁在中国做模特能赚多少钱？",
                         "name": "",
@@ -684,15 +684,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GenericErrorResponse"
-                },
-                "examples": {
-                  "failure": {
-                    "summary": "????",
-                    "value": {
-                      "code": -400,
-                      "message": "bad request"
-                    }
-                  }
                 }
               }
             }
@@ -706,14 +697,6 @@
                 }
               }
             }
-          }
-        },
-        "x-original-url": "https://api.bilibili.com/x/web-interface/wbi/search/default",
-        "x-test-request": {
-          "query": {},
-          "headers": {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
           }
         }
       }
@@ -787,15 +770,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GenericErrorResponse"
-                },
-                "examples": {
-                  "failure": {
-                    "summary": "????",
-                    "value": {
-                      "code": -400,
-                      "message": "bad request"
-                    }
-                  }
                 }
               }
             }
@@ -809,17 +783,6 @@
                 }
               }
             }
-          }
-        },
-        "x-original-url": "https://api.bilibili.com/x/web-interface/wbi/search/square",
-        "x-test-request": {
-          "query": {
-            "limit": "4",
-            "platform": "web"
-          },
-          "headers": {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
           }
         }
       }
@@ -887,24 +850,6 @@
               }
             }
           },
-          "400": {
-            "description": "请求错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenericErrorResponse"
-                },
-                "examples": {
-                  "failure": {
-                    "value": {
-                      "code": -400,
-                      "message": "bad request"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "4XX": {
             "description": "服务异常或网关错误。该接口的错误包裹结构可能不完全统一。",
             "content": {
@@ -925,16 +870,7 @@
               }
             }
           }
-        },
-        "x-original-url": "https://s.search.bilibili.com/main/hotword",
-        "x-test-request": {
-          "query": {},
-          "headers": {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
-          }
-        },
-        "parameters": []
+        }
       }
     },
     "/x/v2/search/trending/ranking": {
@@ -998,35 +934,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GenericErrorResponse"
-                },
-                "examples": {
-                  "failure": {
-                    "summary": "????",
-                    "value": {
-                      "code": -400,
-                      "message": "bad request"
-                    }
-                  }
                 }
               }
             }
           }
-        },
-        "x-original-url": "https://app.bilibili.com/x/v2/search/trending/ranking",
-        "x-test-request": {
-          "query": {
-            "limit": "20"
-          },
-          "headers": {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
-          }
         }
       }
     }
-  },
-  "x-source-doc": "docs/search/hot.md",
-  "x-template-file": "Template/template.json",
-  "x-test-base-url": "https://api.bilibili.com",
-  "x-generated-at": "2026-04-18T06:33:14.833Z"
+  }
 }
