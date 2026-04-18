@@ -1,38 +1,4 @@
-> 上游仓库[SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)由于某些原因已存档，本仓库也将同样归档并转为私有记录。
->
-> 主归档分支为: `master` 在2026年01月24~25日之间从上游同步未进行修改。
->
-> 附归档分支为: `main` 额外存档部分图片资源。
-
-<p align="center">
-    <img src="./assets/img/logo.png" width="250" height="200" />
-</p>
-<h1 align="center">哔哩哔哩 - API 收集整理</h1>
-<p align="center" class="shields">
-    <a href="https://github.com/SocialSisterYi/bilibili-API-collect/issues" style="text-decoration: none;">
-        <img src="https://img.shields.io/github/issues/SocialSisterYi/bilibili-API-collect.svg?style=flat&color=red" alt="GitHub issues"/>
-    </a>
-    <a href="https://github.com/SocialSisterYi/bilibili-API-collect/stargazers" style="text-decoration: none;">
-        <img src="https://img.shields.io/github/stars/SocialSisterYi/bilibili-API-collect.svg?style=flat&color=yellow" alt="GitHub stars"/>
-    </a>
-    <a href="https://github.com/SocialSisterYi/bilibili-API-collect/network" style="text-decoration: none;">
-        <img src="https://img.shields.io/github/forks/SocialSisterYi/bilibili-API-collect.svg?style=flat&color=blue" alt="GitHub forks"/>
-    </a>
-    <a href="https://github.com/SocialSisterYi/bilibili-API-collect/actions" style="text-decoration: none;">
-        <img src="https://img.shields.io/github/actions/workflow/status/SocialSisterYi/bilibili-API-collect/vuepress-deploy.yml?style=flat" alt="Build status"/>
-    </a>
-    <a href="https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/LICENSE" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg?style=flat" alt="GitHub license"/>
-    </a>
-</p>
-<p align="center" class="trendshift">
-  <a href="https://trendshift.io/repositories/3218" target="_blank">
-    <img src="./assets/img/trendshift_6RepoOfTheDay.svg" alt="Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/>
-  </a>
-</p>
-<h3 align="center">野生 API 文档</h3>
-<h3 align="center">不断更新中....</h3>
-
+## 关于本项目
 本项目旨在对 B 站 WEB、APP、TV 等客户端中，散落在世界各地的野生 API 进行收集整理，研究使用方法并对其进行说明，运用了黑箱法、控制变量法、代码逆向分析、拆包及反编译法、网络抓包法等研究办法
 
 本文档探讨的对象是主站业务接口，[官方开放平台](https://openhome.bilibili.com/doc) 和 [直播开放平台](https://open-live.bilibili.com/document/) 均不属于本项目范畴，请移步
@@ -54,17 +20,91 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
 
 :::
 
-## 🌱参与贡献
+## ⚠️仓库声明（个人重构）
 
-欢迎各位 dalao 对本项目做出贡献，也希望每个使用者都能提出宝贵的意见
+1. 本仓库是我个人基于原项目进行的重构与整理；若涉及侵权或其他权利争议，将按要求删除本仓库及相关内容。
+2. 本仓库仅限个人学习与技术研究使用，严禁用于任何商业用途或违法用途。
+3. 本仓库重构接口文档以 `Rebuild-Api-Docs/**` 为准，原始文档仅作参考。
 
-目前本项目存在的问题包括但不限于：
+## 🧭当前仓库定位（企业级重构模式）
 
-1. 文档二级目录尚未完成
-2. 部分文档较旧，修改与更新没有跟进
-3. 目前文档使用 Markdown 语法编写，不易生成编程语言的 SDK，详见 [#604](https://github.com/SocialSisterYi/bilibili-API-collect/issues/604)
+本仓库已进入“归档 + 规范化重构”并行维护阶段：
 
-更多信息请浏览 [贡献指南](CONTRIBUTING.md)
+1. `docs/**` 作为历史原始文档层，仅用于参考，不直接覆盖。
+2. `Rebuild-Api-Docs/**` 作为企业级重构产物层，默认输出 OpenAPI JSON。
+3. 批次任务必须受 `AGENTS.md` 约束，并以 `TODO.md` 为唯一任务进度源。
+
+为避免上下文偏差，开始任何重构任务前请先阅读：
+
+- `AGENTS.md`（执行硬规则）
+- `TODO.md`（待办与完成状态）
+- `tests/validate-rebuild-docs.ps1`（结构校验规则）
+- `tests/test-rebuild-apis.ps1`（接口实测规则）
+
+## 🗂️重构目录约定
+
+- `docs/**`：原始接口文档（输入源）
+- `Rebuild-Api-Docs/**`：重构后文档（输出层）
+- `Template/template.json`：重构模板（生成前必须读取；如缺失需先补齐，否则校验脚本会失败）
+- `TODO.md`：批次任务清单与勾选状态
+- `tests/validate-rebuild-docs.ps1`：OpenAPI 结构校验脚本
+- `tests/test-rebuild-apis.ps1`：接口请求测试脚本
+- `Aengt-Report/**`：批次执行报告与测试报告
+
+## 🔄标准批次流程（建议直接照做）
+
+1. 读取 `TODO.md`，仅选择 `[ ]` 条目。
+2. 计算本批次文件数量（遵守 `AGENTS.md` 的 `<=10` 与 token 分档策略）。
+3. 建立映射：`docs/a/b.md -> Rebuild-Api-Docs/a/b.json`。
+4. 先读取 `Template/template.json`，再按模板生成目标 JSON。
+5. 参数、描述、示例必须来自对应 `docs/*.md`，禁止凭空编造。
+6. 写入后运行结构校验与 API 实测。
+7. 校验通过后更新 `TODO.md` 勾选状态。
+8. 产出 `Aengt-Report/<YYYY-MM-DD_HHmm>.md` 执行报告（40 行以内）。
+
+## ✅本地校验与测试
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tests/validate-rebuild-docs.ps1
+powershell -ExecutionPolicy Bypass -File tests/test-rebuild-apis.ps1
+```
+
+仅测试指定文档批次时：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tests/validate-rebuild-docs.ps1 -BatchFiles @('docs/search/hot.md')
+powershell -ExecutionPolicy Bypass -File tests/test-rebuild-apis.ps1 -BatchFiles @('docs/search/hot.md')
+```
+
+## 🛠️文档站本地运行
+
+```bash
+npm install
+npm run dev
+npm run build
+```
+
+## 🧾重构产物最低要求（OpenAPI JSON）
+
+- 顶层字段：`openapi`、`info`、`servers`、`components`、`paths`
+- 元数据字段：`x-source-doc`、`x-template-file`、`x-test-base-url`
+- operation 必备：参数声明、`responses.200` 成功示例、至少一个非 2xx 错误响应
+- operation 扩展：`x-original-url`、`x-test-request`
+- 编码：UTF-8
+
+## 🧱已重构接口（Rebuild-Api-Docs）
+
+当前已完成并落盘的重构接口文件：
+
+- `Rebuild-Api-Docs/search/hot.json`
+- `Rebuild-Api-Docs/search/search_request.json`
+- `Rebuild-Api-Docs/search/suggest.json`
+
+对应原始文档：
+
+- `docs/search/hot.md -> Rebuild-Api-Docs/search/hot.json`
+- `docs/search/search_request.md -> Rebuild-Api-Docs/search/search_request.json`
+- `docs/search/suggest.md -> Rebuild-Api-Docs/search/suggest.json`
 
 ## 🍴目录
 
@@ -321,11 +361,6 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
     - [x] [主题色](docs/garb/color.md)
     - [ ] [装扮/收藏集](docs/garb/lottery.md)
 
-## ✨鸣谢
-
-你们的存在，让社区更美好
-
-[![contributors](./assets/img/contributors.svg)](https://github.com/SocialSisterYi/bilibili-API-collect/graphs/contributors)
 
 ## 📖相关协议基础
 
@@ -336,79 +371,3 @@ JSON 序列格式：[传送门](https://www.sojson.com/json/json_index.html)
 XML 序列格式：[传送门](https://www.w3school.com.cn/xml/xml_intro.asp)
 
 ProtoBuf 序列格式：[传送门](https://www.jianshu.com/p/a24c88c0526a)
-
-## 💦交流
-
-<img src="./assets/img/45892418_SocialSisterYi.jpg" width="100" height="100" />
-
-⚠注意：开源社群欢迎交流探讨，**拒绝**咨询、**不支持**合作，**黑产号**一经发现立即拉黑并举报相关 SRC
-
-- QQ 交流群：[邀请链接](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=ympvb3LAPT-Ulu3ezhGqbkJ8zXMKImOX&authKey=z1KdkOdKO3wytN43m9K6On9nBtnDL4pAoD6VQHCipFBb9TasNDKuDHCmOE6TF3uc&noverify=0&group_code=191187164)
-- Telegram 交流群：[@bilibili_API_collect_community](https://t.me/bilibili_API_collect_community)
-
-## 🧋发电
-
-欢迎来~~交♂易~~，大家的支持就是我继续开发的动力！
-
-~~请可爱的易姐喝杯奶茶~~
-
-WeChat & Alipay：
-
-<img src="./assets/img/sponsorQR.jpg" width="300" height="300" />
-
-OR Aifadian：[https://afdian.com/@ShakaiAneE](https://afdian.com/@ShakaiAneE)
-
-## 🔗相关项目推荐
-
-### 库及文档
-
-- [jingyuexing/bilibiliAPI](https://github.com/jingyuexing/bilibiliAPI)
-- [fython/BilibiliAPIDocs](https://github.com/fython/BilibiliAPIDocs)
-- [czp3009/bilibili-api](https://github.com/czp3009/bilibili-api)
-- [Vespa314/bilibili-api](https://github.com/Vespa314/bilibili-api)
-- [Pengfei00/bili-utils](https://github.com/Pengfei00/bili-utils): bilibili 工具箱
-- [lovelyyoshino/Bilibili-Live-API](https://github.com/lovelyyoshino/Bilibili-Live-API): Bilibili 直播/番剧 API 文档
-- [flaribbit/bilibili-manga-spider](https://github.com/flaribbit/bilibili-manga-spider): Bilibili 漫画爬虫
-- [simon300000/bili-api](https://github.com/simon300000/bili-api): Bilibili Node.js API
-- [iyear/biligo](https://github.com/iyear/biligo): Bilibili API SDK in Golang
-- [bilibili-openplatform/demo](https://github.com/bilibili-openplatform/demo): 哔哩哔哩开放平台示例代码库
-- [ddiu8081/blive-message-listener](https://github.com/ddiu8081/blive-message-listener): Bilibili-live danmu listener with type. Bilibili 直播间弹幕监听库，支持类型输出。
-- [Nemo2011/bilibili-api](https://github.com/Nemo2011/bilibili-api): 哔哩哔哩常用API调用。支持视频、番剧、用户、频道、音频等功能。工具齐全。
-- [CuteReimu/bilibili](https://github.com/CuteReimu/bilibili): 哔哩哔哩API的Go版本SDK
-
-### 成品
-
-- [NullPointerException/AnimePipe](https://codeberg.org/NullPointerException/AnimePipe): 功能完善的Android流媒体综合客户端，支持Bilibili, Youtube, NicoNico
-- [3Shain/Comen](https://github.com/3Shain/Comen): 基于h5的B站直播弹幕姬
-- [AncientLysine/BiliLocal](https://github.com/AncientLysine/BiliLocal): 本地弹幕播放器
-- [zyzsdy/biliroku](https://github.com/zyzsdy/biliroku): bilibili 生放送（直播）录制
-- [otakustay/danmaku-to-ass](https://github.com/otakustay/danmaku-to-ass): A站B站弹幕转字幕文件
-- [bilibili-helper/bilibili-helper-o](https://github.com/bilibili-helper/bilibili-helper-o): 哔哩哔哩 (bilibili.com) 辅助工具，可以下载视频，查询弹幕发送人以及一些十分实用的直播区功能。
-- [apachecn/CDNDrive](https://github.com/apachecn/CDNDrive): 基于B站相簿上传的文件分块索引存储器
-- [Hsury/BiliDrive](https://github.com/Hsury/BiliDrive): 基于B站相簿上传的文件分块索引存储器
-- [Tsuk1ko/bilibili-live-chat](https://github.com/Tsuk1ko/bilibili-live-chat): 无后端的仿 YouTube Live Chat 风格的简易 Bilibili 弹幕姬
-- [ironmanic/crawler_target_users_good](https://github.com/ironmanic/crawler_target_users_good): 搜索bilibili特定视频，为评论 点赞，关注，私信，一体化服务
-- [dd-center/DDatElectron](https://github.com/dd-center/DDatElectron): DD@Home 分布式项目, 桌面客户端
-- [dd-center/vtbs.moe](https://github.com/dd-center/vtbs.moe): B站VTB数据中心
-- [the1812/Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved): 强大的哔哩哔哩增强脚本: 下载视频、音乐、封面、弹幕 / 简化直播间、评论区、首页 / 自定义顶栏、删除广告、夜间模式 / 触屏设备支持
-- [xlzy520/bili-short-url](https://github.com/xlzy520/bili-short-url): 哔哩哔哩短链生成器
-- [zjkwdy/bili_app_splash](https://github.com/zjkwdy/bili_app_splash): B站壁纸娘和开屏图自动下载，每天使用Actions自动同步
-- [Jannchie/BiliOB](https://github.com/Jannchie/BiliOB): BiliOB观测者是一个观测B站UP主及视频数据变化，并予以分析的Web应用程序
-- [biliob233/biliob233.github.io](https://github.com/biliob233/biliob233.github.io): ~~无可奉告~~
-- [biliup/biliup](https://github.com/biliup/biliup): 全自动录播、投稿工具，支持录制直播弹幕，也支持Youtube、twitch直播回放列表自动搬运到B站
-- [ddiu8081/bilicli](https://github.com/ddiu8081/bilicli): Bilibili-live danmu dashboard in your terminal.
-- [MotooriKashin/Bilibili-Old](https://github.com/MotooriKashin/Bilibili-Old): 恢复旧版Bilibili页面，为了那些念旧的人。
-- [SocialSisterYi/bcut-asr](https://github.com/SocialSisterYi/bcut-asr): 使用必剪API的语音字幕识别
-- [CzJam/Bili_Realtime_Data](https://github.com/CzJam/Bili_Realtime_Data): Bilibili粉丝与视频实时数据统计
-- [kingwingfly/fav](https://github.com/kingwingfly/fav): 自动同步bili收藏夹、合集视频到本地的CLI工具（Rust实现，并提供一个文档测试完善的Rust风格的用于构建有状态爬虫的核心库）
-- [linyuye/Bilibili_crawler](https://github.com/linyuye/Bilibili_crawler): 基于bilibili懒加载api爬取b站动态，视频等评论区
-- [ouzexi/bilibili-hot-tags](https://github.com/ouzexi/bilibili-hot-tags): 一个B站热门视频标签检索统计小工具
-- [SpenserCai/rust-video-downloader](https://github.com/SpenserCai/rust-video-downloader): Rust实现的高性能跨平台视频下载器（目前支持Bilibili），基本覆盖了BBDown的所有功能。
-
-### 其他
-
-- [kuresaru/geetest-validator](https://github.com/kuresaru/geetest-validator): GeeTest 调试器
-- [bloomrpc/bloomrpc](https://github.com/bloomrpc/bloomrpc): GUI Client for GRPC Services
-- [grpc/grpc](https://github.com/grpc/grpc): The C based gRPC (C++, Python, Ruby, Objective-C, PHP, C#)
-- [glideapps/quicktype](https://github.com/glideapps/quicktype): quicktype generates strongly-typed models and serializers from JSON, JSON Schema, TypeScript, and GraphQL queries, making it a breeze to work with JSON type-safely in many programming languages. 一键生成多种语言的JSON反序列化所需类，以便于快速反序列化，有网页版
-- [SessionHu/json-apidoc-gen](https://github.com/SessionHu/json-apidoc-gen): Simple CLI tool for generating BAC document template
