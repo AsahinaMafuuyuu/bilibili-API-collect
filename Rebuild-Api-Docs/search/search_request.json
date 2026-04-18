@@ -1,0 +1,305 @@
+{
+    "meta":  {
+                 "source_doc":  "docs/search/search_request.md",
+                 "output_file_format":  "json",
+                 "encoding":  "UTF-8",
+                 "generated_at":  "2026-04-18T13:39:24+08:00",
+                 "test_base_url":  "https://api.bilibili.com",
+                 "notes":  "Keep original endpoint definitions; test all APIs with test_base_url + path."
+             },
+    "apis":  [
+                 {
+                     "id":  "SEARCH-01",
+                     "name":  "Web integrated search",
+                     "method":  "GET",
+                     "path":  "/x/web-interface/wbi/search/all/v2",
+                     "original_url":  "https://api.bilibili.com/x/web-interface/wbi/search/all/v2",
+                     "auth":  {
+                                  "wbi_signature":  true,
+                                  "cookie":  [
+                                                 "buvid3",
+                                                 "SESSDATA"
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "keyword",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "wts",
+                                                              "type":  "integer",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "w_rid",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          }
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "Cookie",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/x/web-interface/wbi/search/all/v2",
+                                          "query":  {
+                                                        "keyword":  "luotianyi"
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "object"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "null|object"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad request or bad sign",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -412,
+                                             "http_status":  412,
+                                             "description":  "risk blocked",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  "5xx",
+                                             "http_status":  500,
+                                             "description":  "server error",
+                                             "retryable":  true
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://api.bilibili.com/x/web-interface/wbi/search/all/v2\u0027 --data-urlencode \u0027keyword=luotianyi\u0027 --data-urlencode \u0027wts=\u003cunix_ts\u003e\u0027 --data-urlencode \u0027w_rid=\u003cwbi_signature\u003e\u0027 -b \u0027buvid3=\u003cvalue\u003e; SESSDATA=\u003cvalue\u003e\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "0",
+                                                              "ttl":  1,
+                                                              "data":  {
+                                                                           "seid":  "8850295244740510044",
+                                                                           "page":  1,
+                                                                           "pagesize":  20,
+                                                                           "numResults":  1000,
+                                                                           "numPages":  50,
+                                                                           "result":  [
+                                                                                          {
+                                                                                              "result_type":  "video",
+                                                                                              "data":  [
+                                                                                                           {
+                                                                                                               "type":  "video",
+                                                                                                               "aid":  968772260,
+                                                                                                               "bvid":  "BV1Tp4y1S7cu",
+                                                                                                               "title":  "sample",
+                                                                                                               "author":  "sample_up"
+                                                                                                           }
+                                                                                                       ]
+                                                                                          }
+                                                                                      ]
+                                                                       }
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -412,
+                                                              "message":  "blocked",
+                                                              "ttl":  1,
+                                                              "data":  null
+                                                          }
+                                 }
+                 },
+                 {
+                     "id":  "SEARCH-02",
+                     "name":  "Web typed search",
+                     "method":  "GET",
+                     "path":  "/x/web-interface/wbi/search/type",
+                     "original_url":  "https://api.bilibili.com/x/web-interface/wbi/search/type",
+                     "auth":  {
+                                  "wbi_signature":  true,
+                                  "cookie":  [
+                                                 "buvid3",
+                                                 "SESSDATA"
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "search_type",
+                                                              "type":  "string",
+                                                              "required":  true,
+                                                              "enum":  [
+                                                                           "video",
+                                                                           "media_bangumi",
+                                                                           "media_ft",
+                                                                           "live",
+                                                                           "live_room",
+                                                                           "live_user",
+                                                                           "article",
+                                                                           "topic",
+                                                                           "bili_user",
+                                                                           "photo"
+                                                                       ]
+                                                          },
+                                                          {
+                                                              "name":  "keyword",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "order",
+                                                              "type":  "string",
+                                                              "required":  false
+                                                          },
+                                                          {
+                                                              "name":  "order_sort",
+                                                              "type":  "integer",
+                                                              "required":  false,
+                                                              "default":  0
+                                                          },
+                                                          {
+                                                              "name":  "duration",
+                                                              "type":  "integer",
+                                                              "required":  false,
+                                                              "default":  0
+                                                          },
+                                                          {
+                                                              "name":  "page",
+                                                              "type":  "integer",
+                                                              "required":  false,
+                                                              "default":  1,
+                                                              "minimum":  1
+                                                          },
+                                                          {
+                                                              "name":  "wts",
+                                                              "type":  "integer",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "w_rid",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          }
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "Referer",
+                                                                "required":  false,
+                                                                "suggested":  "https://www.bilibili.com/"
+                                                            },
+                                                            {
+                                                                "name":  "User-Agent",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/x/web-interface/wbi/search/type",
+                                          "query":  {
+                                                        "search_type":  "video",
+                                                        "keyword":  "shaonian",
+                                                        "order":  "totalrank",
+                                                        "duration":  "0",
+                                                        "page":  "1"
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json",
+                                                          "Referer":  "https://www.bilibili.com/"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "object"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "null|object"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad request or bad sign",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -412,
+                                             "http_status":  412,
+                                             "description":  "risk blocked",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  "5xx",
+                                             "http_status":  500,
+                                             "description":  "server error",
+                                             "retryable":  true
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://api.bilibili.com/x/web-interface/wbi/search/type\u0027 --data-urlencode \u0027search_type=video\u0027 --data-urlencode \u0027keyword=shaonian\u0027 --data-urlencode \u0027order=totalrank\u0027 --data-urlencode \u0027duration=0\u0027 --data-urlencode \u0027page=1\u0027 --data-urlencode \u0027wts=\u003cunix_ts\u003e\u0027 --data-urlencode \u0027w_rid=\u003cwbi_signature\u003e\u0027 -b \u0027buvid3=\u003cvalue\u003e; SESSDATA=\u003cvalue\u003e\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "0",
+                                                              "ttl":  1,
+                                                              "data":  {
+                                                                           "page":  1,
+                                                                           "pagesize":  20,
+                                                                           "numResults":  1000,
+                                                                           "numPages":  50,
+                                                                           "result":  [
+                                                                                          {
+                                                                                              "type":  "video",
+                                                                                              "aid":  78977417,
+                                                                                              "bvid":  "BV1KJ411C7Un",
+                                                                                              "title":  "sample result",
+                                                                                              "author":  "sample_up"
+                                                                                          }
+                                                                                      ]
+                                                                       }
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -400,
+                                                              "message":  "bad request",
+                                                              "ttl":  1,
+                                                              "data":  null
+                                                          }
+                                 }
+                 }
+             ]
+}

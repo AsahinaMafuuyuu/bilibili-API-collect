@@ -1,0 +1,162 @@
+{
+    "meta":  {
+                 "source_doc":  "docs/search/suggest.md",
+                 "output_file_format":  "json",
+                 "encoding":  "UTF-8",
+                 "generated_at":  "2026-04-18T13:39:24+08:00",
+                 "test_base_url":  "https://api.bilibili.com",
+                 "notes":  "Keep original endpoint definitions; test all APIs with test_base_url + path."
+             },
+    "apis":  [
+                 {
+                     "id":  "SUGGEST-01",
+                     "name":  "Web search suggest",
+                     "method":  "GET",
+                     "path":  "/main/suggest",
+                     "original_url":  "https://s.search.bilibili.com/main/suggest",
+                     "auth":  {
+                                  "wbi_signature":  false,
+                                  "cookie":  [
+                                                 "buvid3"
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "term",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "main_ver",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "v1"
+                                                          },
+                                                          {
+                                                              "name":  "func",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "suggest"
+                                                          },
+                                                          {
+                                                              "name":  "suggest_type",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "accurate"
+                                                          },
+                                                          {
+                                                              "name":  "sub_type",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "tag"
+                                                          },
+                                                          {
+                                                              "name":  "tag_num",
+                                                              "type":  "integer",
+                                                              "required":  false,
+                                                              "default":  10
+                                                          },
+                                                          {
+                                                              "name":  "spmid",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "333.1007"
+                                                          },
+                                                          {
+                                                              "name":  "buvid",
+                                                              "type":  "string",
+                                                              "required":  false
+                                                          }
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "User-Agent",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/main/suggest",
+                                          "query":  {
+                                                        "term":  "luotianyi",
+                                                        "main_ver":  "v1",
+                                                        "func":  "suggest",
+                                                        "suggest_type":  "accurate",
+                                                        "sub_type":  "tag"
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "exp_str":  "string",
+                                                             "result":  "object",
+                                                             "stoken":  "string"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad params",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -412,
+                                             "http_status":  412,
+                                             "description":  "risk blocked",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  "5xx",
+                                             "http_status":  500,
+                                             "description":  "server error",
+                                             "retryable":  true
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://s.search.bilibili.com/main/suggest\u0027 --data-urlencode \u0027term=luotianyi\u0027 --data-urlencode \u0027main_ver=v1\u0027 --data-urlencode \u0027func=suggest\u0027 --data-urlencode \u0027suggest_type=accurate\u0027 --data-urlencode \u0027sub_type=tag\u0027",
+                                     "success_response":  {
+                                                              "exp_str":  "106301_106700",
+                                                              "code":  0,
+                                                              "result":  {
+                                                                             "tag":  [
+                                                                                         {
+                                                                                             "value":  "luotianyi",
+                                                                                             "term":  "luotianyi",
+                                                                                             "ref":  0,
+                                                                                             "name":  "\u003cem class=\"suggest_high_light\"\u003eluotianyi\u003c/em\u003e",
+                                                                                             "spid":  5,
+                                                                                             "type":  ""
+                                                                                         }
+                                                                                     ]
+                                                                         },
+                                                              "stoken":  "4020133863501304726"
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -400,
+                                                              "message":  "bad request",
+                                                              "result":  {
+                                                                             "tag":  [
+
+                                                                                     ]
+                                                                         }
+                                                          }
+                                 }
+                 }
+             ]
+}

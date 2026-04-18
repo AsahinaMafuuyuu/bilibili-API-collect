@@ -1,0 +1,412 @@
+{
+    "meta":  {
+                 "source_doc":  "docs/search/hot.md",
+                 "output_file_format":  "json",
+                 "encoding":  "UTF-8",
+                 "generated_at":  "2026-04-18T13:39:24+08:00",
+                 "test_base_url":  "https://api.bilibili.com",
+                 "notes":  "Keep original endpoint definitions; test all APIs with test_base_url + path."
+             },
+    "apis":  [
+                 {
+                     "id":  "HOT-01",
+                     "name":  "Web default search keyword",
+                     "method":  "GET",
+                     "path":  "/x/web-interface/wbi/search/default",
+                     "original_url":  "https://api.bilibili.com/x/web-interface/wbi/search/default",
+                     "auth":  {
+                                  "wbi_signature":  true,
+                                  "cookie":  [
+                                                 "buvid3"
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "wts",
+                                                              "type":  "integer",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "w_rid",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          }
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "User-Agent",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "Cookie",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/x/web-interface/wbi/search/default",
+                                          "query":  {
+
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "object"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "null|object"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad request or bad sign",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -412,
+                                             "http_status":  412,
+                                             "description":  "risk blocked",
+                                             "retryable":  false
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://api.bilibili.com/x/web-interface/wbi/search/default\u0027 --data-urlencode \u0027wts=\u003cunix_ts\u003e\u0027 --data-urlencode \u0027w_rid=\u003cwbi_signature\u003e\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "0",
+                                                              "ttl":  1,
+                                                              "data":  {
+                                                                           "seid":  "17607543598496143098",
+                                                                           "show_name":  "sample keyword",
+                                                                           "goto_type":  1,
+                                                                           "goto_value":  "243920322",
+                                                                           "url":  "https://www.bilibili.com/video/BV1Tv411q7gx"
+                                                                       }
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -412,
+                                                              "message":  "blocked",
+                                                              "ttl":  1,
+                                                              "data":  null
+                                                          }
+                                 }
+                 },
+                 {
+                     "id":  "HOT-02",
+                     "name":  "Web hot search list (WBI)",
+                     "method":  "GET",
+                     "path":  "/x/web-interface/wbi/search/square",
+                     "original_url":  "https://api.bilibili.com/x/web-interface/wbi/search/square",
+                     "auth":  {
+                                  "wbi_signature":  true,
+                                  "cookie":  [
+                                                 "buvid3"
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "limit",
+                                                              "type":  "integer",
+                                                              "required":  true,
+                                                              "minimum":  1,
+                                                              "maximum":  50
+                                                          },
+                                                          {
+                                                              "name":  "platform",
+                                                              "type":  "string",
+                                                              "required":  false,
+                                                              "default":  "web"
+                                                          },
+                                                          {
+                                                              "name":  "wts",
+                                                              "type":  "integer",
+                                                              "required":  true
+                                                          },
+                                                          {
+                                                              "name":  "w_rid",
+                                                              "type":  "string",
+                                                              "required":  true
+                                                          }
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "User-Agent",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/x/web-interface/wbi/search/square",
+                                          "query":  {
+                                                        "limit":  "4",
+                                                        "platform":  "web"
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "object"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "null|object"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad params",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -412,
+                                             "http_status":  412,
+                                             "description":  "risk blocked",
+                                             "retryable":  false
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://api.bilibili.com/x/web-interface/wbi/search/square\u0027 --data-urlencode \u0027limit=4\u0027 --data-urlencode \u0027platform=web\u0027 --data-urlencode \u0027wts=\u003cunix_ts\u003e\u0027 --data-urlencode \u0027w_rid=\u003cwbi_signature\u003e\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "0",
+                                                              "ttl":  1,
+                                                              "data":  {
+                                                                           "trending":  {
+                                                                                            "title":  "bilibili hot",
+                                                                                            "trackid":  "8079760748892487175",
+                                                                                            "list":  [
+                                                                                                         {
+                                                                                                             "keyword":  "sample",
+                                                                                                             "show_name":  "sample",
+                                                                                                             "icon":  "https://i0.hdslb.com/example.png",
+                                                                                                             "uri":  "",
+                                                                                                             "goto":  ""
+                                                                                                         }
+                                                                                                     ],
+                                                                                            "top_list":  [
+
+                                                                                                         ]
+                                                                                        }
+                                                                       }
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -400,
+                                                              "message":  "bad request",
+                                                              "ttl":  1,
+                                                              "data":  null
+                                                          }
+                                 }
+                 },
+                 {
+                     "id":  "HOT-03",
+                     "name":  "Hotword list (search service)",
+                     "method":  "GET",
+                     "path":  "/main/hotword",
+                     "original_url":  "https://s.search.bilibili.com/main/hotword",
+                     "auth":  {
+                                  "wbi_signature":  false,
+                                  "cookie":  [
+
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+
+                                                      ],
+                                            "headers":  [
+                                                            {
+                                                                "name":  "Accept",
+                                                                "required":  false
+                                                            }
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/main/hotword",
+                                          "query":  {
+
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "timestamp":  "integer",
+                                                             "list":  "array"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer|string",
+                                                             "message":  "string"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  "non-zero",
+                                             "http_status":  "4xx/5xx",
+                                             "description":  "service error",
+                                             "retryable":  true
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl \u0027https://s.search.bilibili.com/main/hotword\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "success",
+                                                              "timestamp":  1596034742,
+                                                              "list":  [
+                                                                           {
+                                                                               "keyword":  "sample",
+                                                                               "show_name":  "sample",
+                                                                               "pos":  1,
+                                                                               "word_type":  8,
+                                                                               "icon":  "https://i0.hdslb.com/example.png"
+                                                                           }
+                                                                       ]
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  500100,
+                                                              "message":  "internal error",
+                                                              "list":  [
+
+                                                                       ]
+                                                          }
+                                 }
+                 },
+                 {
+                     "id":  "HOT-04",
+                     "name":  "App hot search ranking",
+                     "method":  "GET",
+                     "path":  "/x/v2/search/trending/ranking",
+                     "original_url":  "https://app.bilibili.com/x/v2/search/trending/ranking",
+                     "auth":  {
+                                  "wbi_signature":  false,
+                                  "cookie":  [
+
+                                             ]
+                              },
+                     "request_schema":  {
+                                            "query":  [
+                                                          {
+                                                              "name":  "limit",
+                                                              "type":  "integer",
+                                                              "required":  false,
+                                                              "default":  20,
+                                                              "maximum":  100
+                                                          }
+                                                      ],
+                                            "headers":  [
+
+                                                        ]
+                                        },
+                     "test_request":  {
+                                          "url":  "https://api.bilibili.com/x/v2/search/trending/ranking",
+                                          "query":  {
+                                                        "limit":  "20"
+                                                    },
+                                          "headers":  {
+                                                          "User-Agent":  "Mozilla/5.0",
+                                                          "Accept":  "application/json"
+                                                      }
+                                      },
+                     "response_schema":  {
+                                             "success":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "object"
+                                                         },
+                                             "failure":  {
+                                                             "code":  "integer",
+                                                             "message":  "string",
+                                                             "ttl":  "integer",
+                                                             "data":  "null|object"
+                                                         }
+                                         },
+                     "error_codes":  [
+                                         {
+                                             "code":  0,
+                                             "http_status":  200,
+                                             "description":  "ok",
+                                             "retryable":  false
+                                         },
+                                         {
+                                             "code":  -400,
+                                             "http_status":  400,
+                                             "description":  "bad params",
+                                             "retryable":  false
+                                         }
+                                     ],
+                     "samples":  {
+                                     "curl":  "curl -G \u0027https://app.bilibili.com/x/v2/search/trending/ranking\u0027 --data-urlencode \u0027limit=20\u0027",
+                                     "success_response":  {
+                                                              "code":  0,
+                                                              "message":  "0",
+                                                              "ttl":  1,
+                                                              "data":  {
+                                                                           "trackid":  "2578006123492681222",
+                                                                           "list":  [
+                                                                                        {
+                                                                                            "position":  1,
+                                                                                            "keyword":  "sample",
+                                                                                            "show_name":  "sample",
+                                                                                            "word_type":  5,
+                                                                                            "hot_id":  107814
+                                                                                        }
+                                                                                    ]
+                                                                       }
+                                                          },
+                                     "failure_response":  {
+                                                              "code":  -400,
+                                                              "message":  "bad request",
+                                                              "ttl":  1,
+                                                              "data":  null
+                                                          }
+                                 }
+                 }
+             ]
+}

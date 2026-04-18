@@ -1,0 +1,93 @@
+{
+    "generated_at":  "2026-04-18T13:44:04+08:00",
+    "test_base_url":  "https://api.bilibili.com",
+    "total":  7,
+    "passed":  7,
+    "failed":  0,
+    "results":  [
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\hot.json",
+                        "api_id":  "HOT-01",
+                        "api_name":  "Web default search keyword",
+                        "test_url":  "https://api.bilibili.com/x/web-interface/wbi/search/default",
+                        "http_status":  200,
+                        "biz_code":  0,
+                        "biz_message":  "OK",
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  211
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\hot.json",
+                        "api_id":  "HOT-02",
+                        "api_name":  "Web hot search list (WBI)",
+                        "test_url":  "https://api.bilibili.com/x/web-interface/wbi/search/square?limit=4\u0026platform=web",
+                        "http_status":  200,
+                        "biz_code":  0,
+                        "biz_message":  "OK",
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  135
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\hot.json",
+                        "api_id":  "HOT-03",
+                        "api_name":  "Hotword list (search service)",
+                        "test_url":  "https://api.bilibili.com/main/hotword",
+                        "http_status":  200,
+                        "biz_code":  null,
+                        "biz_message":  null,
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  123
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\hot.json",
+                        "api_id":  "HOT-04",
+                        "api_name":  "App hot search ranking",
+                        "test_url":  "https://api.bilibili.com/x/v2/search/trending/ranking?limit=20",
+                        "http_status":  200,
+                        "biz_code":  0,
+                        "biz_message":  "OK",
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  99
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\search_request.json",
+                        "api_id":  "SEARCH-01",
+                        "api_name":  "Web integrated search",
+                        "test_url":  "https://api.bilibili.com/x/web-interface/wbi/search/all/v2?keyword=luotianyi",
+                        "http_status":  200,
+                        "biz_code":  0,
+                        "biz_message":  "OK",
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  143
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\search_request.json",
+                        "api_id":  "SEARCH-02",
+                        "api_name":  "Web typed search",
+                        "test_url":  "https://api.bilibili.com/x/web-interface/wbi/search/type?search_type=video\u0026keyword=shaonian\u0026order=totalrank\u0026duration=0\u0026page=1",
+                        "http_status":  200,
+                        "biz_code":  0,
+                        "biz_message":  "OK",
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  354
+                    },
+                    {
+                        "file":  "D:\\web_project2\\bilibili-API-collect\\Rebuild-Api-Docs\\search\\suggest.json",
+                        "api_id":  "SUGGEST-01",
+                        "api_name":  "Web search suggest",
+                        "test_url":  "https://api.bilibili.com/main/suggest?term=luotianyi\u0026main_ver=v1\u0026func=suggest\u0026suggest_type=accurate\u0026sub_type=tag",
+                        "http_status":  200,
+                        "biz_code":  null,
+                        "biz_message":  null,
+                        "success":  true,
+                        "error":  null,
+                        "elapsed_ms":  162
+                    }
+                ]
+}

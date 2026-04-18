@@ -17,36 +17,30 @@ if (-not (Test-Path $rebuildRoot)) {
     Write-Error "Rebuild-Api-Docs not found: $rebuildRoot"
 }
 
-if (-not $BatchFiles -or $BatchFiles.Count -eq 0) {
-    $BatchFiles = Get-ChildItem $rebuildRoot -Recurse -File -Filter *.md |
-        ForEach-Object {
-            $_.FullName.Substring($rebuildRoot.Length + 1).Replace('\', '/')
-        } |
-        ForEach-Object { "docs/$_" }
+$allRebuildFiles = Get-ChildItem $rebuildRoot -Recurse -File -Filter *.json
+if (-not $allRebuildFiles -or $allRebuildFiles.Count -eq 0) {
+    Write-Error 'No JSON rebuild files found under Rebuild-Api-Docs/**'
 }
 
-$requiredMarkers = @(
-    '#### 接口信息',
-    '#### 请求参数',
-    '#### 错误码',
-    '#### 请求示例',
-    '#### 成功响应示例',
-    '#### 失败响应示例',
-    '#### OpenAPI 3.0 片段',
-    'openapi: 3.0.3'
-)
+if (-not $BatchFiles -or $BatchFiles.Count -eq 0) {
+    $BatchFiles = $allRebuildFiles |
+        ForEach-Object {
+            $relative = $_.FullName.Substring($rebuildRoot.Length + 1).Replace('\', '/')
+            "docs/$([System.IO.Path]::ChangeExtension($relative, 'md'))"
+        }
+}
 
 $todoContent = Get-Content -Path $todoPath -Raw
 $errors = New-Object System.Collections.Generic.List[string]
 $checkedCount = 0
 
-# Check mirror relation for all rebuilt docs.
-$allRebuildFiles = Get-ChildItem $rebuildRoot -Recurse -File -Filter *.md
+# Check mirror relation for all rebuilt JSON files.
 foreach ($file in $allRebuildFiles) {
-    $relative = $file.FullName.Substring($rebuildRoot.Length + 1)
-    $sourcePath = Join-Path $docsRoot $relative
+    $relativeJson = $file.FullName.Substring($rebuildRoot.Length + 1)
+    $relativeDoc = [System.IO.Path]::ChangeExtension($relativeJson, 'md')
+    $sourcePath = Join-Path $docsRoot $relativeDoc
     if (-not (Test-Path $sourcePath)) {
-        $errors.Add("Mirror check failed: missing source file docs/$($relative.Replace('\','/'))")
+        $errors.Add("Mirror check failed: missing source file docs/$($relativeDoc.Replace('\','/'))")
     }
 }
 
@@ -56,23 +50,61 @@ foreach ($source in $BatchFiles) {
         $normalizedSource = "docs/$normalizedSource"
     }
 
-    $relative = $normalizedSource.Substring(5)
-    $target = Join-Path $rebuildRoot $relative
+    if (-not $normalizedSource.EndsWith('.md')) {
+        $normalizedSource = "$normalizedSource.md"
+    }
+
+    $relativeDoc = $normalizedSource.Substring(5)
+    $relativeJson = [System.IO.Path]::ChangeExtension($relativeDoc, 'json')
+    $target = Join-Path $rebuildRoot $relativeJson
 
     if (-not (Test-Path $target)) {
-        $errors.Add("Target file missing: Rebuild-Api-Docs/$($relative.Replace('\','/'))")
+        $errors.Add("Target JSON missing: Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
         continue
     }
 
-    $content = Get-Content -Path $target -Raw
-
-    if (-not $content.StartsWith('# ')) {
-        $errors.Add("Markdown title missing in: Rebuild-Api-Docs/$($relative.Replace('\','/'))")
+    $rawJson = Get-Content -Path $target -Raw
+    try {
+        $json = $rawJson | ConvertFrom-Json
+    } catch {
+        $errors.Add("Invalid JSON: Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+        continue
     }
 
-    foreach ($marker in $requiredMarkers) {
-        if ($content -notmatch [regex]::Escape($marker)) {
-            $errors.Add("Required marker '$marker' missing in: Rebuild-Api-Docs/$($relative.Replace('\','/'))")
+    if (-not $json.meta) {
+        $errors.Add("Missing 'meta' object: Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+    }
+
+    if (-not $json.apis -or $json.apis.Count -lt 1) {
+        $errors.Add("Missing or empty 'apis': Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+    }
+
+    if ($json.meta.source_doc -ne $normalizedSource) {
+        $errors.Add("meta.source_doc mismatch in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+    }
+
+    if ($json.meta.encoding -ne 'UTF-8') {
+        $errors.Add("meta.encoding must be UTF-8 in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+    }
+
+    if ($json.meta.test_base_url -ne 'https://api.bilibili.com') {
+        $errors.Add("meta.test_base_url must be https://api.bilibili.com in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+    }
+
+    foreach ($api in $json.apis) {
+        if (-not $api.id -or -not $api.name -or -not $api.method -or -not $api.path) {
+            $errors.Add("API core fields missing in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+            continue
+        }
+
+        if (-not $api.original_url) {
+            $errors.Add("API original_url missing for $($api.id) in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+        }
+
+        if (-not $api.test_request -or -not $api.test_request.url) {
+            $errors.Add("API test_request.url missing for $($api.id) in Rebuild-Api-Docs/$($relativeJson.Replace('\','/'))")
+        } elseif (-not $api.test_request.url.StartsWith('https://api.bilibili.com')) {
+            $errors.Add("API test_request.url must start with https://api.bilibili.com for $($api.id)")
         }
     }
 
@@ -93,5 +125,5 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Validation passed. Batch files checked: $($BatchFiles.Count); TODO checked: $checkedCount" -ForegroundColor Green
+Write-Host "Validation passed. Batch docs checked: $($BatchFiles.Count); TODO checked: $checkedCount" -ForegroundColor Green
 exit 0
